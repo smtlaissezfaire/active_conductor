@@ -156,4 +156,36 @@ describe ActiveConductor do
       @person_conductor.should_not be_valid
     end
   end
+
+  describe "save" do
+    it "should save each model" do
+      @person_conductor = Class.new(ActiveConductor) do
+        def models
+          [person]
+        end
+
+        def person
+          @person ||= Person.new(:name => "Scott Taylor")
+        end
+      end.new
+
+      @person_conductor.person.should_receive(:save)
+      @person_conductor.save
+    end
+
+    it "should not save if not valid" do
+      @person_conductor = Class.new(ActiveConductor) do
+        def models
+          [person]
+        end
+
+        def person
+          @person ||= Person.new
+        end
+      end.new
+
+      @person_conductor.person.should_not_receive(:save)
+      @person_conductor.save
+    end
+  end
 end

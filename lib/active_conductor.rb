@@ -44,6 +44,14 @@ class ActiveConductor
     []
   end
 
+  def save
+    if valid?
+      models.each do |model|
+        model.save
+      end
+    end
+  end
+
   # ActiveModel compatibility
   def destroyed?
     false
