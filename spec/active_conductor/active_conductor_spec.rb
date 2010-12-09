@@ -202,4 +202,31 @@ describe ActiveConductor do
       @person_conductor.save.should be_false
     end
   end
+
+  describe "assigning attributes" do
+    before do
+      @person_conductor_class = Class.new(ActiveConductor) do
+        def models
+          [person]
+        end
+
+        conduct :person, :name
+
+        def person
+          @person ||= Person.new
+        end
+      end
+
+      @person_conductor = @person_conductor_class.new
+    end
+
+    it "should be able to set attributes" do
+      @person_conductor.attributes = {
+        :name => "Scott Taylor"
+      }
+
+      @person_conductor.name.should == "Scott Taylor"
+      @person_conductor.person.name.should == "Scott Taylor"
+    end
+  end
 end

@@ -56,6 +56,12 @@ class ActiveConductor
     end
   end
 
+  def attributes=(params)
+    params.each do |key, value|
+      self.send("#{key}=", value)
+    end
+  end
+
   # ActiveModel compatibility
   def destroyed?
     false
