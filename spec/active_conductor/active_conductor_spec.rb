@@ -228,5 +228,10 @@ describe ActiveConductor do
       @person_conductor.name.should == "Scott Taylor"
       @person_conductor.person.name.should == "Scott Taylor"
     end
+
+    it "should take attributes in the initializer if given" do
+      @person_conductor = @person_conductor_class.new(:name => "Scott")
+      @person_conductor.name.should == "Scott"
+    end
   end
 end

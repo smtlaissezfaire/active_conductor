@@ -12,6 +12,10 @@ class ActiveConductor
     end
   end
 
+  def initialize(params={})
+    self.attributes = params
+  end
+
   def to_model
     self
   end
