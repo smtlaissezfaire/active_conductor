@@ -158,23 +158,8 @@ describe ActiveConductor do
   end
 
   describe "save" do
-    it "should save each model" do
-      @person_conductor = Class.new(ActiveConductor) do
-        def models
-          [person]
-        end
-
-        def person
-          @person ||= Person.new(:name => "Scott Taylor")
-        end
-      end.new
-
-      @person_conductor.person.should_receive(:save)
-      @person_conductor.save
-    end
-
-    it "should not save if not valid" do
-      @person_conductor = Class.new(ActiveConductor) do
+    before do
+      @person_conductor_class = Class.new(ActiveConductor) do
         def models
           [person]
         end
@@ -182,10 +167,39 @@ describe ActiveConductor do
         def person
           @person ||= Person.new
         end
-      end.new
 
+        conduct :person, :name
+      end
+
+      @person_conductor = @person_conductor_class.new
+    end
+
+    it "should save each model" do
+      @person_conductor.name = "Scott"
+
+      @person_conductor.person.should_receive(:save)
+      @person_conductor.save
+    end
+
+    it "should not save if not valid" do
       @person_conductor.person.should_not_receive(:save)
       @person_conductor.save
+    end
+
+    it "should return true if all models saved successfully" do
+      @person_conductor.name = "Scott"
+      @person_conductor.save.should be_true
+    end
+
+    it "should return false if not valid" do
+      @person_conductor.name = nil
+      @person_conductor.save.should be_false
+    end
+
+    it "should return false if one of the models doesn't save (but is valid)" do
+      @person_conductor.person.stub!(:valid?).and_return true
+      @person_conductor.person.stub!(:save).and_return false
+      @person_conductor.save.should be_false
     end
   end
 end

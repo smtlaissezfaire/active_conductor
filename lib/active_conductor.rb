@@ -47,8 +47,12 @@ class ActiveConductor
   def save
     if valid?
       models.each do |model|
-        model.save
+        unless model.save
+          return false
+        end
       end
+
+      true
     end
   end
 
