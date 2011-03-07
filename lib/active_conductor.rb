@@ -4,7 +4,9 @@ require "forwardable"
 class ActiveConductor
   include ActiveModel::Conversion
   include ActiveModel::Validations
+
   extend ActiveModel::Naming
+  extend ActiveModel::Translation
   extend Forwardable
 
   def self.conduct(obj, *attributes)
