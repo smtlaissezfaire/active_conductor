@@ -123,7 +123,7 @@ class ActiveConductor
   # Create and persist a new conductor in one step.
   #
   # @example Create and yield a conductor
-  #   registration = Registration.create(params[:registration]) do |conductor\
+  #   registration = Registration.create(params[:registration]) do |conductor|
   #     conductor.user.is_admin = true
   #   end
   #
