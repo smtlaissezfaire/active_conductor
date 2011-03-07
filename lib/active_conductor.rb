@@ -2,6 +2,7 @@ require "active_model"
 require "forwardable"
 
 class ActiveConductor
+  include ActiveModel::Conversion
   extend ActiveModel::Naming
   extend Forwardable
 
@@ -14,10 +15,6 @@ class ActiveConductor
 
   def initialize(params={})
     self.attributes = params
-  end
-
-  def to_model
-    self
   end
 
   def valid?
@@ -75,9 +72,4 @@ class ActiveConductor
     false
   end
 
-  def to_key
-  end
-
-  def to_param
-  end
 end
