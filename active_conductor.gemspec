@@ -24,6 +24,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'yard',          '~> 0.6.4'
   s.add_development_dependency 'bluecloth',     '~> 2.0.11'
 
-  s.files        = Dir.glob('{lib}/**/*') + %w[LICENSE README.md]
+  s.files        = Dir.glob('{lib}/**/*') + %w[LICENSE.txt README.md]
   s.require_path = 'lib'
 end
