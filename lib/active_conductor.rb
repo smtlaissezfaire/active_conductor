@@ -20,7 +20,7 @@ class ActiveConductor
   def attributes=(params)
     params.each do |key, value|
       self.send("#{key}=", value)
-    end
+    end if params
   end
 
   def new_record?

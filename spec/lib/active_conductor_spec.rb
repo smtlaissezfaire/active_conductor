@@ -61,11 +61,24 @@ describe ActiveConductor do
     describe "#attributes=" do
       let(:conductor) { model.new }
 
-      before { conductor.attributes = { :name => "Scott Taylor" } }
+      context "with valid attributes" do
+        before { conductor.attributes = { :name => "Scott Taylor" } }
 
-      it "sets the model attributes from the attributes method" do
-        conductor.name.should == "Scott Taylor"
-        conductor.person.name.should == "Scott Taylor"
+        it "sets the model attributes from the attributes method" do
+          conductor.name.should == "Scott Taylor"
+          conductor.person.name.should == "Scott Taylor"
+        end
+      end
+
+      context "with invalid attributes" do
+        before do
+          conductor.attributes = { :name => "Scott Taylor" }
+          conductor.attributes = nil
+        end
+
+        it "ignores the value" do
+          conductor.name.should eql "Scott Taylor"
+        end
       end
     end
   end
