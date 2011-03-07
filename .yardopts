@@ -1,0 +1,6 @@
+--markup markdown
+--readme README.md
+--title 'ActiveConductor API Documentation'
+'lib/**/*.rb'
+-
+LICENSE.txt
