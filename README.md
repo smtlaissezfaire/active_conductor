@@ -61,6 +61,10 @@ You can browse the API documentation directly on [rdoc.info](http://rdoc.info/gi
 
     conductor.errors #=> [["photo", "is not valid"]]
 
+## Contributors
+
+* Michael Kessler ([netzpirat](https://github.com/netzpirat))
+
 ## License
 
 (The MIT License)
