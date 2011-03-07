@@ -66,6 +66,13 @@ class ActiveConductor
     end
   end
 
+  def self.create(attributes, &block)
+    object = new(attributes)
+    yield(object) if block_given?
+    object.save
+    object
+  end
+
   # ActiveModel compatibility
   def destroyed?
     false

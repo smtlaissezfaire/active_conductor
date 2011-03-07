@@ -35,7 +35,7 @@ describe ActiveConductor do
     end
   end
 
-  context "attributes" do
+  context do
     let(:model) do
       Class.new(ActiveConductor) do
         def models
@@ -197,8 +197,8 @@ describe ActiveConductor do
     end
   end
 
-  describe "#save" do
-    let(:conductor) do
+  context do
+    let(:conductor_class) do
       Class.new(ActiveConductor) do
         def models
           [person]
@@ -209,39 +209,75 @@ describe ActiveConductor do
         end
 
         conduct :person, :name
-      end.new
-    end
-
-    context "without validation errors" do
-      it "saves the model" do
-        conductor.name = "Scott"
-        conductor.person.should_receive(:save)
-        conductor.save
-      end
-
-      it "returns true" do
-        conductor.name = "Scott"
-        conductor.save.should be_true
       end
     end
 
-    context "with validation errors" do
-      it "does not save the model" do
-        conductor.person.should_not_receive(:save)
-        conductor.save
+    describe "#save" do
+      let(:conductor) { conductor_class.new }
+
+      context "without validation errors" do
+        it "saves the model" do
+          conductor.name = "Scott"
+          conductor.person.should_receive(:save)
+          conductor.save
+        end
+
+        it "returns true" do
+          conductor.name = "Scott"
+          conductor.save.should be_true
+        end
       end
 
-      it "returns false" do
-        conductor.name = nil
-        conductor.save.should be_false
+      context "with validation errors" do
+        it "does not save the model" do
+          conductor.person.should_not_receive(:save)
+          conductor.save
+        end
+
+        it "returns false" do
+          conductor.name = nil
+          conductor.save.should be_false
+        end
+      end
+
+      context "with an error when saving a valid model" do
+        it "returns false" do
+          conductor.person.stub!(:valid?).and_return true
+          conductor.person.stub!(:save).and_return false
+          conductor.save.should be_false
+        end
       end
     end
 
-    context "with an error when saving a valid model" do
-      it "returns false" do
-        conductor.person.stub!(:valid?).and_return true
-        conductor.person.stub!(:save).and_return false
-        conductor.save.should be_false
+    describe ".create" do
+      context "without validation errors" do
+        it "saves the model" do
+          expect { conductor_class.create(:name => "Scott") }.to change(Person, :count).by(1)
+        end
+
+        it "returns the created conductor" do
+          conductor_class.create(:name => "Scott").should be_kind_of(ActiveConductor)
+        end
+      end
+
+      context "with validation errors" do
+        it "does not save the model" do
+          expect { conductor_class.create(:name => "") }.not_to change(Person, :count).by(1)
+        end
+
+        it "returns the created conductor" do
+          conductor_class.create(:name => "").should be_kind_of(ActiveConductor)
+        end
+      end
+
+      context "with an optional block" do
+        it "switches the context to the block before save" do
+          expect do
+            conductor_class.create(:name => "") do |c|
+              c.name = "Scott"
+            end
+          end.to change(Person, :count).by(1)
+        end
       end
     end
   end
