@@ -3,6 +3,7 @@ pkg/*
 .bundle
 Gemfile.lock
 .yardoc
+doc
 
 ## MAC OS
 .DS_Store
