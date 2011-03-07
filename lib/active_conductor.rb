@@ -3,6 +3,7 @@ require "forwardable"
 
 class ActiveConductor
   include ActiveModel::Conversion
+  include ActiveModel::Validations
   extend ActiveModel::Naming
   extend Forwardable
 
