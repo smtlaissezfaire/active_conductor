@@ -84,19 +84,15 @@ class ActiveConductor
   # @return [true, false] the error status
   #
   def valid?
-    result = true
-
-    models.each do |model|
-      if !model.valid?
-        result = false
-      end
+    models.inject(true) do |result, model|
+      valid = model.valid?
 
       model.errors.each do |field, value|
         errors.add(field, value)
       end
-    end
 
-    result
+      result && valid
+    end
   end
 
   # Returns the errors of the conductor. The errors
@@ -121,15 +117,7 @@ class ActiveConductor
   # @return [true, false] the saved status
   #
   def save
-    if valid?
-      models.each do |model|
-        unless model.save
-          return false
-        end
-      end
-
-      true
-    end
+    models.each { |model| return false unless model.save } if valid?
   end
 
   # Create and persist a new conductor in one step.
