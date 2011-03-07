@@ -131,7 +131,7 @@ class ActiveConductor
   # @param block [Proc] An optional proc that yields to the created conductor
   # @return [ActiveConductor] the created conductor
   #
-  def self.create(attributes, &block)
+  def self.create(attributes)
     object = new(attributes)
     yield(object) if block_given?
     object.save
