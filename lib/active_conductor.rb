@@ -17,6 +17,16 @@ class ActiveConductor
     self.attributes = params
   end
 
+  def attributes=(params)
+    params.each do |key, value|
+      self.send("#{key}=", value)
+    end
+  end
+
+  def new_record?
+    models.all? { |m| m.new_record? }
+  end
+
   def valid?
     result = true
 
@@ -31,10 +41,6 @@ class ActiveConductor
     end
 
     result
-  end
-
-  def new_record?
-    models.all? { |m| m.new_record? }
   end
 
   def errors
@@ -54,12 +60,6 @@ class ActiveConductor
       end
 
       true
-    end
-  end
-
-  def attributes=(params)
-    params.each do |key, value|
-      self.send("#{key}=", value)
     end
   end
 
