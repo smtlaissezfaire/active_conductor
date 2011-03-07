@@ -26,6 +26,10 @@ Install as a Rails plugin:
 
     rails plugin install git://github.com/smtlaissezfaire/active_conductor.git
 
+## Documentation
+
+You can browse the API documentation directly on [rdoc.info](http://rdoc.info/github/netzpirat/active_conductor/master/frames).
+
 ## Example
 
     class SignupConductor < ActiveConductor
