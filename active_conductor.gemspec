@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Scott Taylor', 'Michael Kessler']
   s.email       = ['scott@railsnewbie.com', 'michi@netzpiraten.ch']
-  s.homepage    = 'https://github.com/smtlaissezfaire/active_conductor'
+  s.homepage    = 'https://github.com/netzpirat/active_conductor'
   s.summary     = 'Conductor plugin for Rails 3'
   s.description = 'This plugin uses the conductor pattern to wrap multiple models as one object'
 
