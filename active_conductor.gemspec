@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name        = 'active_conductor'
-  s.version     = '0.1.0'
+  s.version     = '0.1.1'
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Scott Taylor', 'Michael Kessler']
   s.email       = ['scott@railsnewbie.com', 'michi@netzpiraten.ch']
