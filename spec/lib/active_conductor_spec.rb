@@ -36,22 +36,41 @@ describe ActiveConductor do
   end
 
   context do
-    let(:model) do
-      Class.new(ActiveConductor) do
-        def models
-          [person]
-        end
+    class Model < ActiveConductor
+      include ActiveModel::Serializers::JSON
 
-        conduct :person, :name
+      def models
+        [person, record]
+      end
 
-        def person
-          @person ||= Person.new
-        end
+      conduct :person, :name
+      conduct :record, :an_int
+
+      def person
+        @person ||= Person.new
+      end
+
+      def record
+        @record ||= Record.new
+      end
+    end
+
+    class OtherModel < ActiveConductor
+      include ActiveModel::Serializers::Xml
+
+      def models
+        [person]
+      end
+
+      conduct :person, :name
+
+      def person
+        @person ||= Person.new
       end
     end
 
     describe '#initialize' do
-      let(:conductor) { model.new(:name => 'Scott') }
+      let(:conductor) { Model.new(:name => 'Scott') }
 
       it 'sets the model attributes from the conductor initializer' do
         conductor.name.should == 'Scott'
@@ -59,7 +78,7 @@ describe ActiveConductor do
     end
 
     describe '#attributes=' do
-      let(:conductor) { model.new }
+      let(:conductor) { Model.new }
 
       context 'with valid attributes' do
         before { conductor.attributes = { :name => 'Scott Taylor' } }
@@ -89,6 +108,36 @@ describe ActiveConductor do
         it 'ignores the value' do
           conductor.name.should eql 'Scott Taylor'
         end
+      end
+    end
+
+    describe '#attributes' do
+      let(:conductor) { Model.new(:name => 'Scott', :an_int => 12) }
+      let(:other_conductor) { OtherModel.new(:name => 'Scott') }
+
+      before do
+        conductor.an_int = 13
+      end
+
+      it 'knows the conducted attributes' do
+        conductor.attributes.should eql({ 'name' => 'Scott', 'an_int' => 13 })
+        other_conductor.attributes.should eql({ 'name' => 'Scott'})
+      end
+
+      it 'generates a proper serializable hash' do
+        conductor.serializable_hash.should eql({ 'an_int' => 13, 'name' => 'Scott' })
+        other_conductor.serializable_hash.should eql({ 'name' => 'Scott'})
+      end
+
+      it 'serialized the attributes to json' do
+        # Ruby 1.8 Hashes aren't ordered, so the output is not
+        conductor.to_json({}).should include "{\"model\":{"
+        conductor.to_json({}).should include "\"an_int\":13"
+        conductor.to_json({}).should include "\"name\":\"Scott\""
+      end
+
+      it 'serialized the attributes to xml' do
+        other_conductor.to_xml({}).should include "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<other-model>\n  <name>Scott</name>\n</other-model>\n"
       end
     end
   end

@@ -30,25 +30,42 @@ require "forwardable"
 class ActiveConductor
   include ActiveModel::Conversion
   include ActiveModel::Validations
+  include ActiveModel::Serialization
 
   extend ActiveModel::Naming
   extend ActiveModel::Translation
   extend Forwardable
 
-  # Conduct an attribute from the conductor to the associated
-  # model.
-  #
-  # @example Conduct an the email and password attribute to the user model
-  #   conduct :user, :email, :password
-  #
-  # @param model [Symbol] the name of the model
-  # @param *attributes [Symbol] one or more model attribute name
-  #
-  def self.conduct(model, *attributes)
-    attributes.each do |attr|
-      def_delegator model, attr
-      def_delegator model, "#{attr}="
+  attr_accessor :conducted_attributes
+
+  class << self
+
+    # Conduct an attribute from the conductor to the associated
+    # model.
+    #
+    # @example Conduct an the email and password attribute to the user model
+    #   conduct :user, :email, :password
+    #
+    # @param model [Symbol] the name of the model
+    # @param *attributes [Symbol] one or more model attribute name
+    #
+    def conduct(model, *attributes)
+      conducted_attributes.concat(attributes.map(&:to_sym))
+
+      attributes.each do |attr|
+        def_delegator model, attr
+        def_delegator model, "#{attr}="
+      end
     end
+
+    # Remembers the conducted attributes
+    #
+    # @return [Array] the attributes
+    #
+    def conducted_attributes
+      @conducted_attributes ||= []
+    end
+
   end
 
   # Initialize the conductor with optional attributes.
@@ -68,6 +85,17 @@ class ActiveConductor
     attributes.each do |key, value|
       self.send("#{key}=", value) if respond_to?(key.to_sym)
     end if attributes
+  end
+
+  # Get the conducted attribute methods
+  #
+  # @return [Hash] the conducted attributes values
+  #
+  def attributes
+    self.class.conducted_attributes.inject({}) do |attributes, name|
+      attributes[name.to_s] = send(name)
+      attributes
+    end
   end
 
   # Tests if all of the records have been persisted.
