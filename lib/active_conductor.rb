@@ -66,7 +66,7 @@ class ActiveConductor
   #
   def attributes=(attributes)
     attributes.each do |key, value|
-      self.send("#{key}=", value)
+      self.send("#{key}=", value) if respond_to?(key.to_sym)
     end if attributes
   end
 
