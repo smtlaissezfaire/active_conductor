@@ -24,7 +24,7 @@ Add it to your Gemfile:
 
 Install as a Rails plugin:
 
-    rails plugin install git://github.com/netzpirat/active_conductor.git
+    rails plugin install git://github.com/smtlaissezfaire/active_conductor.git
 
 ## Documentation
 
