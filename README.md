@@ -28,7 +28,7 @@ Install as a Rails plugin:
 
 ## Documentation
 
-You can browse the API documentation directly on [rdoc.info](http://rdoc.info/github/netzpirat/active_conductor/master/frames).
+You can browse the API documentation directly on [rdoc.info](http://rdoc.info/github/smtlaissezfaire/active_conductor/master/frames).
 
 ## Example
 
